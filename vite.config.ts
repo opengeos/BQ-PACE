@@ -3,6 +3,6 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   // Base path for GitHub Pages deployment
-  // Uses repository name as base path in CI, root for local development
-  base: process.env.GITHUB_ACTIONS ? "/BQ-PACE/" : "/",
+  // Use root path since custom domain (bq-pace.hypercoast.org) is configured
+  base: "/",
 });
