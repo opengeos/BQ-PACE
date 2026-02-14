@@ -107,18 +107,20 @@ async function initializeMap() {
 
   // Function to set up layers and controls
   const setupMap = () => {
-  // Add Google Satellite layer
-  map.addSource("google-satellite", {
+  // Add USGS Imagery basemap layer
+  map.addSource("usgs-imagery", {
     type: "raster",
-    tiles: ["https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"],
+    tiles: [
+      "https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=0&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}",
+    ],
     tileSize: 256,
-    attribution: "© Google",
+    attribution: "© USGS",
   });
 
   map.addLayer({
-    id: "google-satellite-layer",
+    id: "USGS-imagery-layer",
     type: "raster",
-    source: "google-satellite",
+    source: "usgs-imagery",
     paint: {
       "raster-opacity": 1,
     },
