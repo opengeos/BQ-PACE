@@ -182,7 +182,7 @@ async function initializeMap() {
     loop: true,
     collapsed: false,
     panelWidth: 320,
-    onChange: (index, label) => {
+    onChange: (index) => {
       // console.log(`Displaying PACE data for: ${label} (index: ${index})`);
 
       // Update the raster source with the new tile URL
