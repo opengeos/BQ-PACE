@@ -8,9 +8,48 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "peerDependencies": {
+    "jspdf": ">=2.5.0",
+    "maplibre-gl": ">=5.16.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "jspdf": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "typescript": "~5.9.3",
-    "vite": "^7.3.1"
+    "@duckdb/duckdb-wasm": "^1.32.0",
+    "@geoman-io/maplibre-geoman-free": "^0.6.2",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
+    "@typescript-eslint/parser": "^8.55.0",
+    "@vitejs/plugin-react": "^5.1.4",
+    "@vitest/ui": "^4.0.18",
+    "eslint": "^9.0.0",
+    "jsdom": "^28.0.0",
+    "jspdf": "^4.1.0",
+    "maplibre-gl": "5.18.0",
+    "prettier": "^3.8.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "shpjs": "^6.2.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-node-polyfills": "^0.25.0",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@geoman-io/maplibre-geoman-free": "^0.6.3",
