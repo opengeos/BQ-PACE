@@ -3,47 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MapLibre GL Time Slider - PACE Chlorophyll-a Example</title>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <title>Biogeochemical Water Quality from PACE (BQ-PACE)</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      box-sizing: border-box;
     }
-    #map {
-      width: 100vw;
-      height: 100vh;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      color: #fff;
     }
-    .info-panel {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      max-width: 350px;
-      font-size: 13px;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
-    .info-panel h3 {
-      margin: 0 0 10px 0;
-      font-size: 14px;
+    header {
+      text-align: center;
+      margin-bottom: 60px;
     }
-    .info-panel p {
-      margin: 0 0 8px 0;
-      color: #555;
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #00d4ff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .info-panel code {
-      background: #f0f0f0;
-      padding: 2px 5px;
-      border-radius: 3px;
-      font-size: 12px;
+    header p {
+      font-size: 1.2rem;
+      color: #a0aec0;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.5);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+    .card-icon.chl-a {
+      background: linear-gradient(135deg, #00ff88, #00d4ff);
+    }
+    .card-icon.acdom {
+      background: linear-gradient(135deg, #ff6b6b, #ffa500);
+    }
+    .card-icon.tss {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+    }
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .card p {
+      color: #a0aec0;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .card .arrow {
+      color: #00d4ff;
+      font-size: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      margin-top: 80px;
+      padding: 20px;
+      color: #a0aec0;
+      font-size: 0.9rem;
+    }
+    footer a {
+      color: #00d4ff;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div id="map"></div>
-  <script type="module" src="./src/main.ts"></script>
+  <div class="container">
+    <header>
+      <h1>Biogeochemical Water Quality from PACE (BQ-PACE)</h1>
+      <p>Explore ocean color data products from NASA's PACE (Plankton, Aerosol, Cloud, ocean Ecosystem) mission. Visualize time-series data for various ocean parameters.</p>
+    </header>
+
+    <div class="cards">
+      <a href="map.html?product=chl-a" class="card">
+        <div class="card-icon chl-a">&#127793;</div>
+        <h2>Chlorophyll-a (Chl-a)</h2>
+        <p>Chlorophyll-a concentration indicates phytoplankton abundance, a key indicator of ocean productivity and ecosystem health.</p>
+        <span class="arrow">&rarr; View Map</span>
+      </a>
+
+      <a href="map.html?product=acdom440" class="card">
+        <div class="card-icon acdom">&#127754;</div>
+        <h2>aCDOM440</h2>
+        <p>Absorption coefficient of Colored Dissolved Organic Matter at 440nm. Indicates dissolved organic material from terrestrial and marine sources.</p>
+        <span class="arrow">&rarr; View Map</span>
+      </a>
+
+      <a href="map.html?product=tss" class="card">
+        <div class="card-icon tss">&#127786;</div>
+        <h2>Total Suspended Solids (TSS)</h2>
+        <p>Total Suspended Solids concentration in water. Important for water quality assessment and sediment transport studies.</p>
+        <span class="arrow">&rarr; View Map</span>
+      </a>
+    </div>
+
+    <footer>
+      <p>
+        Contact: <a href="https://bingqingliu.com" target="_blank">Bingqing Liu</a> |
+        Source code:<a href="https://github.com/opengeos/BQ-PACE" target="_blank">GitHub</a> |
+        Data source: <a href="https://source.coop/giswqs/opengeos/PACE" target="_blank">Source Cooperative</a> |
+        NASA PACE Mission: <a href="https://pace.gsfc.nasa.gov/" target="_blank">pace.gsfc.nasa.gov</a>
+      </p>
+    </footer>
+  </div>
 </body>
 </html>
