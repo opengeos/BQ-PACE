@@ -7,7 +7,7 @@ import "maplibre-gl-time-slider/style.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import "@geoman-io/maplibre-geoman-free/dist/maplibre-geoman.css";
-import { addControlGrid, DEFAULT_EXCLUDE_LAYERS } from "maplibre-gl-components";
+import { addControlGrid, DEFAULT_EXCLUDE_LAYERS, Colorbar } from "maplibre-gl-components";
 import { LayerControl } from "maplibre-gl-layer-control";
 import "maplibre-gl-layer-control/style.css";
 
@@ -24,25 +24,52 @@ import "maplibre-gl-components/style.css";
 const BASEMAP_STYLE =
   "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
-// NASA PACE Chlorophyll-a data
-const rasterData: Record<string, string> = {
-  "2024-04-18":
-    "https://github.com/opengeos/pace-data/releases/download/chla/chla_2024-04-18.tif",
-  "2024-04-19":
-    "https://github.com/opengeos/pace-data/releases/download/chla/chla_2024-04-19.tif",
-  "2024-04-20":
-    "https://github.com/opengeos/pace-data/releases/download/chla/chla_2024-04-20.tif",
-  "2024-04-21":
-    "https://github.com/opengeos/pace-data/releases/download/chla/chla_2024-04-21.tif",
-  "2024-04-22":
-    "https://github.com/opengeos/pace-data/releases/download/chla/chla_2024-04-22.tif",
-};
+// NASA PACE Chlorophyll-a data source
+const RASTER_CSV_URL =
+  "https://data.source.coop/giswqs/opengeos/PACE/Chl-a/files.csv";
+const RASTER_BASE_URL =
+  "https://data.source.coop/giswqs/opengeos/PACE/Chl-a/";
 
-const labels = Object.keys(rasterData);
-const urls = Object.values(rasterData);
+// Parse date from filename: PACE_OCI.20240306T184049.L2.OC_AOP.tif -> 2024-03-06
+function extractDateFromFilename(filename: string): string {
+  const match = filename.match(/PACE_OCI\.(\d{4})(\d{2})(\d{2})T/);
+  if (match) {
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+  return "";
+}
+
+// Fetch and parse the raster file list
+async function fetchRasterData(): Promise<{ labels: string[]; urls: string[] }> {
+  const response = await fetch(RASTER_CSV_URL);
+  const text = await response.text();
+  const filenames = text
+    .trim()
+    .split("\n")
+    .filter((line) => line.endsWith(".tif"));
+
+  const rasterData: Record<string, string> = {};
+
+  for (const filename of filenames) {
+    const date = extractDateFromFilename(filename);
+    if (date) {
+      // Use the first file for each date (avoid duplicates)
+      if (!rasterData[date]) {
+        rasterData[date] = RASTER_BASE_URL + filename;
+      }
+    }
+  }
+
+  // Sort by date
+  const sortedDates = Object.keys(rasterData).sort();
+  const labels = sortedDates;
+  const urls = sortedDates.map((date) => rasterData[date]);
+
+  return { labels, urls };
+}
 
 // TiTiler configuration
-const TITILER_ENDPOINT = "https://giswqs-titiler-endpoint.hf.space";
+const TITILER_ENDPOINT = "https://titiler.d2s.org/";
 
 // Create the initial tile URL
 function createTileUrl(cogUrl: string): string {
@@ -50,8 +77,8 @@ function createTileUrl(cogUrl: string): string {
     url: cogUrl,
     endpoint: TITILER_ENDPOINT,
     colormap: "jet",
-    rescale: [0, 1], // Chlorophyll-a concentration
-    nodata: "nan",
+    rescale: [0, 30], // Chlorophyll-a concentration
+    nodata: -9999,
   });
 }
 
@@ -59,8 +86,8 @@ function createTileUrl(cogUrl: string): string {
 const map = new maplibregl.Map({
   container: "map",
   style: BASEMAP_STYLE,
-  center: [-98, 38.5],
-  zoom: 4,
+  center: [-89.6735, 24.6463],
+  zoom: 5.05,
   maxPitch: 85,
 });
 
@@ -68,20 +95,32 @@ const map = new maplibregl.Map({
 const RASTER_SOURCE_ID = "pace-chla-raster";
 const RASTER_LAYER_ID = "pace-chla-layer";
 
-// Add raster layer and time slider when map loads
-map.on("load", () => {
-  // Add Google Satellite layer
-  map.addSource("google-satellite", {
+// Initialize the map with raster data
+async function initializeMap() {
+  const { labels, urls } = await fetchRasterData();
+  console.log(`Loaded ${labels.length} PACE Chl-a raster files`);
+
+  if (urls.length === 0) {
+    console.error("No raster files found");
+    return;
+  }
+
+  // Function to set up layers and controls
+  const setupMap = () => {
+  // Add USGS Imagery basemap layer
+  map.addSource("usgs-imagery", {
     type: "raster",
-    tiles: ["https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"],
+    tiles: [
+      "https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=0&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}",
+    ],
     tileSize: 256,
-    attribution: "© Google",
+    attribution: "© USGS",
   });
 
   map.addLayer({
-    id: "google-satellite-layer",
+    id: "USGS-imagery-layer",
     type: "raster",
-    source: "google-satellite",
+    source: "usgs-imagery",
     paint: {
       "raster-opacity": 1,
     },
@@ -125,6 +164,18 @@ map.on("load", () => {
     layerControl.registerCustomAdapter(adapter);
   }
 
+
+  // Add a horizontal colorbar with custom colors
+  const chlorophyllBar = new Colorbar({
+    colormap: "jet",
+    vmin: 0,
+    vmax: 30,
+    label: 'Chlorophyll-a (mg/m^3)',
+    orientation: 'horizontal',
+  });
+  map.addControl(chlorophyllBar, 'bottom-left');
+
+
   // Create the time slider control
   const timeSlider = new TimeSliderControl({
     title: "Time Slider",
@@ -133,16 +184,20 @@ map.on("load", () => {
     loop: true,
     collapsed: false,
     panelWidth: 320,
-    onChange: (index, label) => {
-      console.log(`Displaying PACE data for: ${label} (index: ${index})`);
+    onChange: (index) => {
+      // console.log(`Displaying PACE data for: ${label} (index: ${index})`);
 
       // Update the raster source with the new tile URL
-      const source = map.getSource(
-        RASTER_SOURCE_ID,
-      ) as maplibregl.RasterTileSource;
-      if (source) {
-        const newTileUrl = createTileUrl(urls[index]);
-        source.setTiles([newTileUrl]);
+      try {
+        const source = map.getSource(
+          RASTER_SOURCE_ID,
+        ) as maplibregl.RasterTileSource;
+        if (source && urls[index]) {
+          const newTileUrl = createTileUrl(urls[index]);
+          source.setTiles([newTileUrl]);
+        }
+      } catch (error) {
+        console.warn("Error updating tiles:", error);
       }
     },
   });
@@ -164,4 +219,15 @@ map.on("load", () => {
   });
 
   console.log("PACE chlorophyll-a time slider control added to map");
-});
+  };
+
+  // Handle case where map may already be loaded
+  if (map.loaded()) {
+    setupMap();
+  } else {
+    map.on("load", setupMap);
+  }
+}
+
+// Start the application
+initializeMap().catch(console.error);
