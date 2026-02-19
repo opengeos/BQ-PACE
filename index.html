@@ -62,23 +62,18 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
     .card-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
+      width: 120px;
+      height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
       margin-bottom: 20px;
     }
-    .card-icon.chl-a {
-      background: linear-gradient(135deg, #00ff88, #00d4ff);
-    }
-    .card-icon.acdom {
-      background: linear-gradient(135deg, #ff6b6b, #ffa500);
-    }
-    .card-icon.tss {
-      background: linear-gradient(135deg, #a855f7, #ec4899);
+    .card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
     }
     .card h2 {
       font-size: 1.5rem;
@@ -93,9 +88,55 @@
       color: #00d4ff;
       font-size: 1.2rem;
     }
+    .partners {
+      margin-top: 80px;
+      padding: 40px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .partners h3 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #a0aec0;
+    }
+    .partners p {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+      color: #a0aec0;
+      font-size: 0.95rem;
+    }
+    .partner-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 50px;
+    }
+    .partner-logo {
+      width: 150px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .partner-logo:hover {
+      transform: translateY(-5px) scale(1.1);
+    }
+    .partner-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: all 0.3s ease;
+    }
+    .partner-logo:hover img {
+      transform: scale(1.05);
+    }
     footer {
       text-align: center;
-      margin-top: 80px;
+      margin-top: 40px;
       padding: 20px;
       color: #a0aec0;
       font-size: 0.9rem;
@@ -112,31 +153,65 @@
 <body>
   <div class="container">
     <header>
-      <h1>Biogeochemical Water Quality from PACE (BQ-PACE)</h1>
+      <h1>Biogeochemical Water Quality from SPACE</h1>
       <p>Explore ocean color data products from NASA's PACE (Plankton, Aerosol, Cloud, ocean Ecosystem) mission. Visualize time-series data for various ocean parameters.</p>
     </header>
 
     <div class="cards">
       <a href="map.html?product=chl-a" class="card">
-        <div class="card-icon chl-a">&#127793;</div>
+        <div class="card-icon">
+          <img src="public/logos/chla.png" alt="Chlorophyll-a">
+        </div>
         <h2>Chlorophyll-a (Chl-a)</h2>
-        <p>Chlorophyll-a concentration indicates phytoplankton abundance, a key indicator of ocean productivity and ecosystem health.</p>
+        <p>Chlorophyll-a (Chl-a; mg m-3) is a photosynthetic pigment in algae and cyanobacteria and serves as a proxy for phytoplankton biomass in aquatic ecosystems.
+        </p>
         <span class="arrow">&rarr; View Map</span>
       </a>
 
       <a href="map.html?product=acdom440" class="card">
-        <div class="card-icon acdom">&#127754;</div>
-        <h2>aCDOM440</h2>
-        <p>Absorption coefficient of Colored Dissolved Organic Matter at 440nm. Indicates dissolved organic material from terrestrial and marine sources.</p>
+        <div class="card-icon">
+          <img src="public/logos/cdom.png" alt="CDOM">
+        </div>
+        <h2>Colored Dissolved Organic Matter (CDOM)</h2>
+        <p>Colored Dissolved Organic Matter (CDOM) is the light-absorbing fraction of dissolved organic matter that strongly influences underwater light fields, and  CDOM absorption (aCDOM; m-1) serves as a key indicator of blackwater systems rich in humic substances.
+        </p>
         <span class="arrow">&rarr; View Map</span>
       </a>
 
       <a href="map.html?product=tss" class="card">
-        <div class="card-icon tss">&#127786;</div>
+        <div class="card-icon">
+          <img src="public/logos/tss.png" alt="Total Suspended Solids">
+        </div>
         <h2>Total Suspended Solids (TSS)</h2>
-        <p>Total Suspended Solids concentration in water. Important for water quality assessment and sediment transport studies.</p>
+        <p>Total suspended solids (TSS; mg m-3) concentration represents the abundance of non-algal particles. In rivers, estuaries, and coastal waters, TSS is a key indicator of turbidity and is widely used in water quality monitoring and remote sensing applications.
+        </p>
         <span class="arrow">&rarr; View Map</span>
       </a>
+    </div>
+
+    <div class="partners">
+      <h3>Partners & Sponsors</h3>
+      <p>This work was supported by the NASA PACE program (80NSSC24K1415), the NASA EMIT program (80NSSC24K0865), and the NSF (2425811 and 2425812), which supported algorithm development and validation. Product validation was also strongly supported by the USACE ERDC Freshwater HAB Program and the NOAA NCCOS Hypoxia Program (Grant NA23NOS4780285). We further acknowledge support from NASA's Marine Biodiversity Observation Network (MBON) project for estuarine water quality product validation.</p>
+      <div class="partner-logos">
+        <div class="partner-logo">
+          <img src="public/logos/nasa.png" alt="NASA" title="NASA">
+        </div>
+        <div class="partner-logo">
+          <img src="public/logos/emit.png" alt="EMIT" title="EMIT">
+        </div>
+        <div class="partner-logo">
+          <img src="public/logos/pace.png" alt="PACE Mission" title="PACE Mission">
+        </div>
+        <div class="partner-logo">
+          <img src="public/logos/nsf.png" alt="NSF" title="National Science Foundation">
+        </div>
+        <div class="partner-logo">
+          <img src="public/logos/usace.png" alt="USACE" title="US Army Corps of Engineers">
+        </div>
+        <div class="partner-logo">
+          <img src="public/logos/noaa.png" alt="NOAA" title="NOAA">
+        </div>
+      </div>
     </div>
 
     <footer>
