@@ -154,20 +154,20 @@ async function initializeMap() {
 
   // Function to set up layers and controls
   const setupMap = () => {
-    // Add USGS Imagery basemap layer
-    map.addSource("usgs-imagery", {
+    // Add Esri World Imagery basemap layer
+    map.addSource("esri-imagery", {
       type: "raster",
       tiles: [
-        "https://basemap.nationalmap.gov/arcgis/services/USGSImageryOnly/MapServer/WMSServer?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&LAYERS=0&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&STYLES=&BBOX={bbox-epsg-3857}",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       ],
       tileSize: 256,
-      attribution: "© USGS",
+      attribution: "© Esri, Maxar, Earthstar Geographics, and the GIS User Community",
     });
 
     map.addLayer({
-      id: "USGS-imagery-layer",
+      id: "esri-imagery-layer",
       type: "raster",
-      source: "usgs-imagery",
+      source: "esri-imagery",
       paint: {
         "raster-opacity": 1,
       },
