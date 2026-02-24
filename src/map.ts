@@ -116,7 +116,7 @@ async function fetchRasterData(): Promise<{ labels: string[]; urls: string[] }> 
 }
 
 // TiTiler configuration
-const TITILER_ENDPOINT = "https://titiler.d2s.org/";
+const TITILER_ENDPOINT = "https://6ia56f0mod.execute-api.us-east-1.amazonaws.com/";
 
 // Create the initial tile URL
 function createTileUrl(cogUrl: string): string {
